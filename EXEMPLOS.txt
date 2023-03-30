@@ -1,0 +1,176 @@
+create database aula10;
+use aula10;
+
+create table funcionario(
+idfunc	int			not null,
+nome	varchar(40)	not null,
+cidade	varchar(30)	not null,
+estado	varchar(02)	not null,
+dtnasc	datetime	not null,
+cargo	varchar(20)	not null,
+salario	decimal(7,2)not null
+);
+
+--delete from funcionario
+insert into funcionario values (1,'Getulina','Bauru','SP','30/06/2000','Programador',2200);
+insert into funcionario values (2,'Geovalda','Agudos','SP','01/02/2000','Analista',3500);
+insert into funcionario values (3,'Graça','Gramado','RS','10/12/1990','Programador',2700);
+insert into funcionario values (4,'Natalina','Bauru','SP','31/10/2019','Gerente',4500);
+insert into funcionario values (5,'Uvina','Agudos','SP','22/05/1995','Analista',900);
+insert into funcionario values (6,'Rosalina','Jau','SP','13/08/1989','Programador',2900);
+insert into funcionario values (7,'Pasqualina','Gramado','RS','03/11/1989','Analista',3999);
+insert into funcionario values (8,'Joaquina','Agudos','SP','13/08/1999','Gerente',4999);
+insert into funcionario values (9,'Maricota','Gramado','RS','03/11/2001','Estagiario',1999);
+insert into funcionario values (10,'Pasqualona','Bauru','SP','03/11/1989','Analista',3700);
+insert into funcionario values (11,'Katarina','Agudos','SP','13/08/1999','Programador',2350);
+insert into funcionario values (12,'katianeusa','Jau','SP','03/11/2001','Estagiario',2100);
+insert into funcionario values (13,'Abelardo','Agudos','SP','13/08/1999','Programador',2999);
+insert into funcionario values (14,'Berenice','Bauru','SP','03/11/2001','Estagiario',1750);
+insert into funcionario values (15,'Lampião','Gramado','RS','20/11/2010','Programador',2100);
+insert into funcionario values (16,'Maria Bonita','Gramado','RS','03/11/2005','Estagiario',1999);
+insert into funcionario values (17,'Zetti','Rio Bonito','RS','03/11/2005','Estagiario',4999);
+insert into funcionario values (18,'Maria Mariana','Maraba','PA','03/11/2005','Analista',5999);
+insert into funcionario values (19,'Zenir Zenor','Ananindeua','PA','11/11/2006','Programador',4999);
+select * from funcionario;
+
+select sum(salario)
+from funcionario
+where cargo = 'programador';
+
+select sum(salario)
+from funcionario
+where cargo = 'estagiario';
+
+select sum(salario)
+from funcionario
+where cargo = 'analista';
+
+select cargo,sum(salario)
+from funcionario
+group by cargo;
+
+select cargo, max(salario) 'Maior Salário de cada Cargo'
+from funcionario
+group by cargo;
+
+select cidade, min(salario) 'Menor Salário de cada Cidade'
+from funcionario 
+group by cidade;
+
+select estado, avg(salario) 'Média Salarial por Estado'
+from funcionario
+group by estado;
+
+select estado,cargo, avg(salario) 'Média Salarial por Estado'
+from funcionario
+group by estado,cargo
+order by estado;
+
+select cargo, sum(salario) 'Total de Salários por cargo'
+from funcionario
+group by cargo 
+order by cargo desc;
+
+select cargo, count(*)	-- todos os registros
+from funcionario
+group by cargo;
+
+select cargo, count(cargo)	-- conta somente quem não for NULL
+from funcionario
+group by cargo;
+
+select cargo, max(salario) 'Maior Salário de cada cargo',
+			  min(salario) 'Menor Salário de cada cargo',
+			  avg(salario) 'Média Salarial por cargo',
+			  sum(salario) 'Total de Salário por cargo',
+			  count(*) 'Total de Funcionários em cada cargo'
+from funcionario
+group by cargo;
+
+select cidade, max(salario) 'Maior Salário de cada cargo',
+			   min(salario) 'Menor Salário de cada cargo',
+			   convert(decimal(7,2),avg(salario)) 'Média Salarial por cargo',
+			   sum(salario) 'Total de Salário por cargo',
+			   count(*) 'Total de Funcionários em cada cargo'
+from funcionario
+group by cidade;
+
+
+select cargo, avg(salario) 
+       'Média Salarial por grupo com salario maior 2500'
+from funcionario
+where salario > 2500		-- só vai agrupar quem tiver o salario maior que 2000
+group by cargo;				-- estágiários ganham menos que 2500
+
+select cargo, max(salario)
+from funcionario
+group by cargo
+having cargo <> 'estagiario';	-- filtro do agrupamento
+
+select cargo, avg(salario) 'Media Salarial'
+from funcionario
+where salario > 2500		-- filtro para agrupar		
+group by cargo
+having cargo <> 'gerente';	-- filtro do agrupamento
+
+select cargo, count(*), avg(salario)'Media Salarial'
+from funcionario
+where nome like '%p%' and salario > 2500	-- filtro para agrupar		
+group by cargo
+having cargo <> 'gerente';					-- filtro do agrupamento
+
+select cargo, convert(decimal(7,2),avg(salario)) 'Media Salarial'
+from funcionario
+where salario between 900 and 2400	-- filtro para agrupar		
+group by cargo
+having cargo <> 'gerente';			-- filtro do agrupamento
+
+select cidade, cargo, max(salario)
+from funcionario
+group by cidade,cargo
+
+select cidade,cargo,max(salario)
+from funcionario
+group by cidade,cargo
+order by cidade,cargo;
+
+select cidade,cargo,	max(salario) 'Maior Salário de cada cargo',
+						min(salario) 'Menor Salário de cada cargo',
+						avg(salario) 'Média Salarial por cargo',
+						sum(salario) 'Total de Salário por cargo',
+						count(salario) 'Total de Funcionários em cada cargo'
+from funcionario
+group by cidade,cargo
+order by cidade,cargo;
+
+select cidade,cargo,	max(salario) 'Maior Salário de cada cargo',
+						min(salario) 'Menor Salário de cada cargo',
+						avg(salario) 'Média Salarial por cargo',
+						sum(salario) 'Total de Salário por cargo',
+						count(salario) 'Total de Funcionários em cada cargo'
+from funcionario
+where salario > 2000
+group by cidade,cargo
+having cargo <> 'Gerente'
+order by cidade,cargo;
+
+select cidade,cargo,	max(salario) 'Maior Salário de cada cargo',
+						min(salario) 'Menor Salário de cada cargo',
+						convert(decimal(7,2),avg(salario)) 'Média Salarial por cargo',
+						sum(salario) 'Total de Salário por cargo',
+						count(salario) 'Total de Funcionários em cada cargo'
+from funcionario
+group by cidade,cargo
+having cidade <> 'agudos' or cargo <> 'Gerente'
+order by cidade,cargo;
+
+select cidade,cargo,	max(salario) 'Maior Salário de cada cargo',
+						min(salario) 'Menor Salário de cada cargo',
+						convert(decimal(7,2),avg(salario)) 'Média Salarial por cargo',
+						sum(salario) 'Total de Salário por cargo',
+						count(salario) 'Total de Funcionários em cada cargo'
+from funcionario
+where salario > 2000
+group by cidade,cargo
+having (cidade = 'agudos' or cidade = 'Gramado') and cargo <> 'Gerente'
+order by cidade,cargo;
